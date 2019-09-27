@@ -1,4 +1,4 @@
-### A wrapper for [kafka-python](https://kafka-python.readthedocs.io/en/master/usage.html)
+### A module to verify email address
 
 #### Installation
 
