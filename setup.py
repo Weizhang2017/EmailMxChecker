@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="EmailMxChecker",
-    version="0.1",
+    version="0.1.1",
     author="Wei Zhang",
     author_email="zhangw1.2011@gmail.com",
     description="A module to verify email address by SMTP handshake",

@@ -9,7 +9,7 @@ pip install EmailMxChecker
 Install from Github:
 ```shell
 git clone https://github.com/Weizhang2017/EmailMxChecker
-cd pythonKakfaWrapper 
+cd EmailMxChecker 
 python setup.py install
 ```
 
