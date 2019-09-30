@@ -54,14 +54,15 @@ class EmailValidator(SMTPHandshake, CheckMx):
 			result = 'domain not found'
 		return result
 
-	def check_catchall(self, email_domain, mx_domain):
+	def check_catchall(self, email_address):
 		'''
 		Check whether an mx is catchall
 		return: CATCHALL 1
 				NON CATCHALL 0
 		'''
-
-		random_rcpt_address = self.__class__.random_email(email_domain)
+		domain = email_address.split('@')[-1]
+		mx_domain = self._get_domain(domain)
+		random_rcpt_address = self.__class__.random_email(domain)
 		SMTPHandshake.__init__(
 			self,
 			rcpt_to_address=random_rcpt_address,

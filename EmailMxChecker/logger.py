@@ -9,14 +9,13 @@ class Logger:
 		logger_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 		
 		for handler in handlers:
-
 			if handler == 'file':
 
 				f_handler = logging.FileHandler(f'{filename}')
 				f_handler.setFormatter(logger_format)
 				self.logger.addHandler(f_handler)
 
-			if handler == 'stream':
+			elif handler == 'stream':
 				s_handler = logging.StreamHandler()
 				s_handler.setFormatter(logger_format)
 				self.logger.addHandler(s_handler)

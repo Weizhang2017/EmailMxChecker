@@ -4,8 +4,10 @@ import string
 import re
 from .logger import Logger
 import socket
+import logging
 
-logger = Logger(name='smtp_handshake')
+logger = Logger(name='smtp_handshake', level=logging.WARNING,
+     handlers=['stream', 'file'], filename='mx_unknown_response.log')
 
 class SMTPHandshake:
     '''
@@ -82,7 +84,10 @@ class SMTPHandshake:
             self.rcpt_to_address, self.mx, self.fqdn, self.mail_from_address
             )
         result = self.__class__.result_paser(code)
-        logger.info(f'email address:{self.rcpt_to_address}, result: {code}, {message}')
+        if result == Result.UNKNOWN:
+            logger.warning(f'email address:{self.rcpt_to_address}, result: {code}, {message}')
+        else:
+            logger.info(f'email address:{self.rcpt_to_address}, result: {code}, {message}')
         return result
 
     @staticmethod
@@ -130,15 +135,21 @@ class SMTPHandshake:
         code: 
         '''
         if code == -1:
-            return Result.CONNECTIONTIMEOUT
+            return Result.CONNECTION_ERR
         elif code == 250:
             return Result.ACCEPTED
+        elif code == 503:
+            return Result.ACCESS_DENIED
+        elif code == 550 or code == 454 or code == 551:
+            return Result.INVALID_RECIPIENT
         else:
-            return Result.REJECTED
+            return Result.UNKNOWN
 
 
 class Result:
     '''Results from SMTP handshake'''
-    CONNECTIONTIMEOUT = 'mx connection timeout'
-    REJECTED = 'email address rejected'
-    ACCEPTED = 'email address accepted'
+    CONNECTION_ERR = 'mx_connection_error'
+    INVALID_RECIPIENT = 'invalid_recipient'
+    ACCEPTED = 'email_address_accepted'
+    ACCESS_DENIED = 'mx_server_access_denied'
+    UNKNOWN = 'unknown_response'

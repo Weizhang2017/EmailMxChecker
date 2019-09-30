@@ -2,7 +2,7 @@ from smtplib import SMTP
 # from logger import Logger
 from EmailMxChecker import SMTPHandshake, CheckMx, EmailValidator
 import dns.resolver
-
+import csv
 
 def main():
 	with SMTP(host='aspmx.l.google.com.', port=0, local_hostname='asd.com') as smtp:
@@ -47,16 +47,26 @@ def test_CheckMx():
 
 def test_emailvalidator():
 	email_validator = EmailValidator('asd.com')
-	result1 = email_validator.validate('wrong_email_id@gmail.com')
-	print(result1)
-	result2 = email_validator.validate('test123@gmail.com')
-	print(result2)
-	result3 = email_validator.validate('test@hotmail.com')
-	print(result3)
+	result1 = email_validator.validate('rong.liu@rdbio.com')
+	# print(result1)
+	# result2 = email_validator.validate('test123@gmail.com')
+	# print(result2)
+	# result3 = email_validator.validate('test@hotmail.com')
+	# print(result3)
 
-
-
+def error_email_address():
+	email_validator = EmailValidator('asd.com')
+	with open('invalid_email_test.txt', 'r') as f:
+		reader = csv.reader(f)
+		with open('res_invalid_email_test.txt', 'w') as f2:
+			for line in list(reader)[1:]:
+				result_cat = email_validator.check_catchall(line[0])
+				if not result_cat:
+					result = email_validator.validate(line[0])
+				else:
+					result = 'catch_all_domain'
+				f2.write(f'{line[0]}, {result}\n')
 if __name__ == '__main__':
 	# test_CheckMx()
-	test_emailvalidator()
+	error_email_address()
 	
