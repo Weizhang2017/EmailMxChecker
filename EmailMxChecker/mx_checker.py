@@ -48,6 +48,10 @@ class CheckMx:
 			logger.info('mx not found')
 			code = 402
 
+		except dns.resolver.NoNameservers as naerr:
+			logger.info('name server not found')
+			code = 403
+
 		return mx_list, code
 
 	def first_mx(self):
