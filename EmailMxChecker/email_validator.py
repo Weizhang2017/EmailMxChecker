@@ -62,17 +62,21 @@ class EmailValidator(SMTPHandshake, CheckMx):
 		'''
 		domain = email_address.split('@')[-1]
 		mx_domain = self._get_domain(domain)
-		random_rcpt_address = self.__class__.random_email(domain)
-		SMTPHandshake.__init__(
-			self,
-			rcpt_to_address=random_rcpt_address,
-			mx=mx_domain,
-			fqdn=self.fqdn,
-			mail_from_address=self.mail_from_address
-			)
-		result = self.verify()
-		if result == Result.ACCEPTED:
-			IS_CATCHALL = 1
+		if mx_domain:
+			random_rcpt_address = self.__class__.random_email(domain)
+			SMTPHandshake.__init__(
+				self,
+				rcpt_to_address=random_rcpt_address,
+				mx=mx_domain,
+				fqdn=self.fqdn,
+				mail_from_address=self.mail_from_address
+				)
+			result = self.verify()
+			if result == Result.ACCEPTED:
+				IS_CATCHALL = 1
+			else:
+				IS_CATCHALL = 0	
 		else:
-			IS_CATCHALL = 0
+			IS_CATCHALL = -1
+
 		return IS_CATCHALL

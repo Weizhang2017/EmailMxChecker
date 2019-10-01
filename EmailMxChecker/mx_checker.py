@@ -1,7 +1,7 @@
 import dns.resolver
 import re
 from .logger import Logger
-logger = Logger(name='mx_checker')
+logger = Logger(name=__name__)
 
 class CheckMx:
 	'''

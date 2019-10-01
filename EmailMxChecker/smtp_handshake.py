@@ -6,7 +6,7 @@ from .logger import Logger
 import socket
 import logging
 
-logger = Logger(name='smtp_handshake', level=logging.WARNING,
+logger = Logger(name=__name__, level=logging.WARNING,
      handlers=['stream', 'file'], filename='mx_unknown_response.log')
 
 class SMTPHandshake:
