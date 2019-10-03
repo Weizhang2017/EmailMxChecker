@@ -1,8 +1,14 @@
 import logging
+import weakref
 
 class Logger:
+	'''
+	Cashed logger: associate a single logger instance with a given name
+	'''
 
+	_logger_cache = weakref.WeakValueDictionary()
 	def __init__(self, name='logger', level=logging.DEBUG, handlers=['stream'], filename='app.log'):
+		
 		self.logger = logging.getLogger(name)
 		self.logger.setLevel(level)
 
@@ -23,6 +29,13 @@ class Logger:
 			else:
 				raise Exception('No handler specified')
 
+	def __new__(cls, name='logger'):
+		if name in cls._logger_cache:
+			return cls._logger_cache[name]
+		else:
+			self = super().__new__(cls)
+			cls._logger_cache[name] = self
+			return self
 
 	def debug(self, msg):
 	    self.logger.debug(msg)
