@@ -97,7 +97,7 @@ class SMTPHandshake:
         """
         code, msg = 0, None
         try:
-            server = smtplib.SMTP(local_hostname=fqdn, timeout=10)
+            server = smtplib.SMTP(local_hostname=fqdn, timeout=8)
             server.connect(mx)
             server.ehlo(name=fqdn)
             server.mail(mail_from_address)

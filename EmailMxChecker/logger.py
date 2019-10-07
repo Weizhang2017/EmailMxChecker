@@ -29,7 +29,7 @@ class Logger:
 			else:
 				raise Exception('No handler specified')
 
-	def __new__(cls, name='logger'):
+	def __new__(cls, name='logger', level=logging.DEBUG, handlers=['stream'], filename='app.log'):
 		if name in cls._logger_cache:
 			return cls._logger_cache[name]
 		else:
