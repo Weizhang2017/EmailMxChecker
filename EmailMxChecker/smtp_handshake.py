@@ -140,7 +140,7 @@ class SMTPHandshake:
             return Result.ACCEPTED
         elif code == 503:
             return Result.ACCESS_DENIED
-        elif code == 454 or code == 551 or
+        elif code == 454 or code == 551 or\
             re.search(Pattern.INVALID_RECIPIENT, message.lower()):
             return Result.INVALID_RECIPIENT
         elif re.search(Pattern.BLOCKED, message.lower()):
