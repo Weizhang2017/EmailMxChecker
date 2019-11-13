@@ -128,7 +128,7 @@ class SMTPHandshake:
         return f'{randon_string}@{domain}'
 
     @staticmethod
-    def result_paser(code):
+    def result_paser(code, message):
         '''
         Parse the code and messages and return the validity 
         of the email address
@@ -140,10 +140,17 @@ class SMTPHandshake:
             return Result.ACCEPTED
         elif code == 503:
             return Result.ACCESS_DENIED
-        elif code == 550 or code == 454 or code == 551:
+        elif code == 454 or code == 551 or
+            re.search(Pattern.INVALID_RECIPIENT, message.lower()):
             return Result.INVALID_RECIPIENT
+        elif re.search(Pattern.BLOCKED, message.lower()):
+            return Result.BLOCKED
+        elif re.search(Pattern.REVERSE_DNS, message.lower())
+            return Result.REVERSE_DNS
+        elif re.search(Pattern.GREYLISTING, message.lower()):
+            return Result.GREYLISTING
         else:
-            return Result.UNKNOWN
+            return f'{Result.UNKNOWN}: {message}'
 
 
 class Result:
@@ -152,4 +159,13 @@ class Result:
     INVALID_RECIPIENT = 'invalid_recipient'
     ACCEPTED = 'email_address_accepted'
     ACCESS_DENIED = 'mx_server_access_denied'
+    BLOCKED = 'access blocked'
+    REVERSE_DNS = 'mx_server_access_denied: reserse DNS'
     UNKNOWN = 'unknown_response'
+    GREYLISTING = 'greylisted'
+
+class Pattern:
+    BLOCKED = r'block|blacklist'
+    REVERSE_DNS = r'reverse'
+    INVALID_RECIPIENT = r'address\s*rejected|invalid\s*recipient|no\s*mailbox'
+    GREYLISTING = r'internal resource temporarily unavailable|greylist'
