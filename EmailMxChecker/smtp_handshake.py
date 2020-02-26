@@ -83,7 +83,7 @@ class SMTPHandshake:
         code, message = self.__class__.smtp_handshake(
             self.rcpt_to_address, self.mx, self.fqdn, self.mail_from_address
             )
-        result = self.__class__.result_paser(code)
+        result = self.__class__.result_paser(code, message)
         if result == Result.UNKNOWN:
             logger.warning(f'email address:{self.rcpt_to_address}, result: {code}, {message}')
         else:
@@ -145,7 +145,7 @@ class SMTPHandshake:
             return Result.INVALID_RECIPIENT
         elif re.search(Pattern.BLOCKED, message.lower()):
             return Result.BLOCKED
-        elif re.search(Pattern.REVERSE_DNS, message.lower())
+        elif re.search(Pattern.REVERSE_DNS, message.lower()):
             return Result.REVERSE_DNS
         elif re.search(Pattern.GREYLISTING, message.lower()):
             return Result.GREYLISTING
