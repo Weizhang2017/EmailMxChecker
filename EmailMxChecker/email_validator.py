@@ -29,7 +29,7 @@ class EmailValidator(SMTPHandshake, CheckMx):
 		mx_domain, _ = self.first_mx()
 		return mx_domain
 
-	def validate(self, email_address):
+	def validate(self, email_address,response_type='short'):
 		'''
 		Validate an email address
 		return: mx connection timeout
@@ -49,7 +49,7 @@ class EmailValidator(SMTPHandshake, CheckMx):
 				fqdn=self.fqdn,
 				mail_from_address=self.mail_from_address
 				)
-			result = self.verify()
+			result = self.verify(response_type)
 		else:
 			result = 'domain not found'
 		return result
