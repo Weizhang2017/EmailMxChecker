@@ -28,6 +28,7 @@ class SMTPHandshake:
 
     email_pattern = r'^[0-9a-zA-Z][0-9a-zA-Z_\-\.]*[0-9a-zA-Z]@[0-9a-zA-Z][0-9a-zA-Z\.-]*[a-zA-Z]$'
     fqdn_pattern = r'[\w]*.[\w]*'
+    _response_type = ['short', 'long']
 
     def __init__(self, *, rcpt_to_address, mx, fqdn, mail_from_address=None):
         self.rcpt_to_address = rcpt_to_address
@@ -64,6 +65,8 @@ class SMTPHandshake:
             self._mail_from_address = self.__class__.random_email(self.fqdn)
         elif re.search(self.email_pattern, value) is None:
             raise ValueError('Invalid Email address format')
+        else:
+            self._mail_from_address = value
         
     
     @mx.setter
@@ -77,8 +80,15 @@ class SMTPHandshake:
         self._rcpt_to_address = value
     
 
-    def verify(self):
-        '''Verifiy email address by SMTP handshake'''
+    def verify(self, response_type='short'):
+        '''
+        Verifiy email address by SMTP handshake
+        if response_type == "short", return interpreted result only
+        if response_type == "long", return interpreted result and raw message
+        '''
+
+        if response_type not in self._response_type:
+            raise ValueError(f'Invalid response type. Expected of of {_response_type}')
 
         code, message = self.__class__.smtp_handshake(
             self.rcpt_to_address, self.mx, self.fqdn, self.mail_from_address
@@ -88,7 +98,10 @@ class SMTPHandshake:
             logger.warning(f'email address:{self.rcpt_to_address}, result: {code}, {message}')
         else:
             logger.info(f'email address:{self.rcpt_to_address}, result: {code}, {message}')
-        return result
+        if response_type == 'short':
+            return result
+        elif response_type == 'long':
+            return result, message
 
     @staticmethod
     def smtp_handshake(rcpt_to_address, mx, fqdn, mail_from_address):
@@ -150,7 +163,7 @@ class SMTPHandshake:
         elif re.search(Pattern.GREYLISTING, message.lower()):
             return Result.GREYLISTING
         else:
-            return f'{Result.UNKNOWN}: {message}'
+            return Result.UNKNOWN
 
 
 class Result:
@@ -167,5 +180,5 @@ class Result:
 class Pattern:
     BLOCKED = r'block|blacklist'
     REVERSE_DNS = r'reverse'
-    INVALID_RECIPIENT = r'address\s*rejected|invalid\s*recipient|no\s*mailbox'
+    INVALID_RECIPIENT = r'address\s*rejected|invalid\s*recipient|no\s*mailbox|not\s*exist'
     GREYLISTING = r'internal resource temporarily unavailable|greylist'

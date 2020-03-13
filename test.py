@@ -1,8 +1,9 @@
 from smtplib import SMTP
-# from logger import Logger
+from EmailMxChecker.logger import Logger
 from EmailMxChecker import SMTPHandshake, CheckMx, EmailValidator
 import dns.resolver
 import csv
+logger = Logger(__name__)
 
 def main():
 	with SMTP(host='aspmx.l.google.com.', port=0, local_hostname='asd.com') as smtp:
@@ -13,20 +14,21 @@ def main():
 		logger.debug(smtp.quit())
 
 def test_handshake():
-	res = SMTPVerification.verify('test@gmail.com', 
-		'aspmx.l.google.com', 
-		'asd@asd.com', 
-		'asd.com')
-	logger.debug(res)
+	smtp_handshake = SMTPHandshake(
+		rcpt_to_address='zha21ngw1.2011@gmail.com', 
+		mx='gmail-smtp-in.l.google.com', 
+		fqdn='asd.com',
+		# mail_from_address='asd@asd.com'
+		)
+	logger.debug(smtp_handshake.verify(response_type='long'))
 
 def test_verify():
-	logger_test = Logger()
 	smtphandshake = SMTPHandshake(
-		rcpt_to_address='test@gmail.com', 
-		mx='aspmx.l.googlsde.com', 
+		rcpt_to_address='zhangw1.2011@gmail.com', 
+		mx='aspmx.l.google.com', 
 		fqdn='asd.com'
 		)
-	logger_test.debug(smtphandshake.verify())
+	logger.debug(smtphandshake.verify(response_type='long'))
 
 def test_search_mx():
 	try:
@@ -39,7 +41,7 @@ def test_search_mx():
 		print(f'{mxerr}')
 
 def test_CheckMx():
-	check_mx = CheckMx('gmail.com')
+	check_mx = CheckMx('gmail1323.com')
 	check_mx.first_mx()
 	print('+'*128)
 	mx = check_mx.list_mx()
@@ -68,5 +70,5 @@ def error_email_address():
 				f2.write(f'{line[0]}, {result}\n')
 if __name__ == '__main__':
 	# test_CheckMx()
-	error_email_address()
-	
+	# error_email_address()
+	test_handshake()
