@@ -32,3 +32,15 @@ from EmailMxChecker import EmailValidator
 email_validator = EmailValidator('abc.com')
 result = email_validator.validate('wrong_email_id@gmail.com')
 ```
+
+###### v1.1.10 update
+Return mx response by specifying argument response_type
+```python
+result = email_validator.validate('wrong_email_id@gmail.com', response_type='long')
+>>>print(result)
+('invalid_recipient', "5.1.1 The email account that you tried to reach does not exist. \
+Please try\n5.1.1 double-checking the recipient's email address for typos or\n5.1.1 unnecessary \
+spaces. Learn more at\n5.1.1  https://support.google.com/mail/?p=NoSuchUser q36si1115197pjq.147 - gsmtp")
+```
+
+

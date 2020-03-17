@@ -49,8 +49,8 @@ def test_CheckMx():
 
 def test_emailvalidator():
 	email_validator = EmailValidator('asd.com')
-	result1 = email_validator.validate('rong.liu@rdbio.com')
-	# print(result1)
+	result1 = email_validator.validate('wrong_email_id@gmail.com', response_type='long')
+	print(result1)
 	# result2 = email_validator.validate('test123@gmail.com')
 	# print(result2)
 	# result3 = email_validator.validate('test@hotmail.com')
@@ -71,4 +71,4 @@ def error_email_address():
 if __name__ == '__main__':
 	# test_CheckMx()
 	# error_email_address()
-	test_handshake()
+	test_emailvalidator()
