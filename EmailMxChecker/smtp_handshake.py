@@ -180,6 +180,6 @@ class Result:
 class Pattern:
     BLOCKED = r'block|blacklist'
     REVERSE_DNS = r'reverse'
-    INVALID_RECIPIENT = (r'address\s*rejected|invalid\s*recipient|no\s*mailbox|not\s*exist'
+    INVALID_RECIPIENT = (r'address\s*rejected|invalid\s*recipient|no\s*mailbox|not\s*exist|'
                         r'unknown|unavailable|not.*found|no longer accept|no.*users')
     GREYLISTING = r'internal resource temporarily unavailable|greylist'
