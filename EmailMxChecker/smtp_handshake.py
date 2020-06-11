@@ -118,7 +118,7 @@ class SMTPHandshake:
             msg = "".join(map(chr, msg))
             server.quit()
         except smtplib.SMTPServerDisconnected as err:
-            msg = str("SMTP Server don't allow ping: ".format(err))
+            msg = str("SMTP Server doesn't allow ping: ".format(err))
             code = -1
         except socket.timeout as serr:
             msg = "Unable to connect to SMTP server"
@@ -154,13 +154,13 @@ class SMTPHandshake:
         elif code == 503:
             return Result.ACCESS_DENIED
         elif code == 454 or code == 551 or\
-            re.search(Pattern.INVALID_RECIPIENT, message.lower()):
+            re.search(Pattern.INVALID_RECIPIENT, message, re.IGNORECASE):
             return Result.INVALID_RECIPIENT
-        elif re.search(Pattern.BLOCKED, message.lower()):
+        elif re.search(Pattern.BLOCKED, message, re.IGNORECASE):
             return Result.BLOCKED
-        elif re.search(Pattern.REVERSE_DNS, message.lower()):
+        elif re.search(Pattern.REVERSE_DNS, message, re.IGNORECASE):
             return Result.REVERSE_DNS
-        elif re.search(Pattern.GREYLISTING, message.lower()):
+        elif re.search(Pattern.GREYLISTING, message, re.IGNORECASE):
             return Result.GREYLISTING
         else:
             return Result.UNKNOWN
@@ -180,5 +180,6 @@ class Result:
 class Pattern:
     BLOCKED = r'block|blacklist'
     REVERSE_DNS = r'reverse'
-    INVALID_RECIPIENT = r'address\s*rejected|invalid\s*recipient|no\s*mailbox|not\s*exist'
+    INVALID_RECIPIENT = (r'address\s*rejected|invalid\s*recipient|no\s*mailbox|not\s*exist'
+                        r'unknown|unavailable|not.*found|no longer accept|no.*users')
     GREYLISTING = r'internal resource temporarily unavailable|greylist'
