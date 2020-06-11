@@ -118,7 +118,7 @@ class SMTPHandshake:
             msg = "".join(map(chr, msg))
             server.quit()
         except smtplib.SMTPServerDisconnected as err:
-            msg = str("SMTP Server doesn't allow ping: ".format(err))
+            msg = str("SMTP Server doesn't allow ping: {}".format(err))
             code = -1
         except socket.timeout as serr:
             msg = "Unable to connect to SMTP server"

@@ -59,6 +59,7 @@ class EmailValidator(SMTPHandshake, CheckMx):
 		Check whether an mx is catchall
 		return: CATCHALL 1
 				NON CATCHALL 0
+				MX connection timeout or domain not found -1
 		'''
 		domain = email_address.split('@')[-1]
 		mx_domain = self._get_domain(domain)
@@ -74,6 +75,8 @@ class EmailValidator(SMTPHandshake, CheckMx):
 			result = self.verify()
 			if result == Result.ACCEPTED:
 				IS_CATCHALL = 1
+			elif result == Result.CONNECTION_ERR:
+				IS_CATCHALL = -1
 			else:
 				IS_CATCHALL = 0	
 		else:

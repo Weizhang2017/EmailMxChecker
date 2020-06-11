@@ -68,7 +68,18 @@ def error_email_address():
 				else:
 					result = 'catch_all_domain'
 				f2.write(f'{line[0]}, {result}\n')
+
+def socket_err_test():
+	email_validator = EmailValidator('asd.com')
+	result1 = email_validator.validate('jyotiranjan.patra@bharti-axagi.co.in', response_type='long')
+	print(result1)
+
+def socket_err_catchall_test():
+	email_validator = EmailValidator('asd.com')
+	result1 = email_validator.check_catchall('jyotiranjan.patra@bharti-axagi.co.in')
+	print(result1)
+
 if __name__ == '__main__':
 	# test_CheckMx()
 	# error_email_address()
-	test_emailvalidator()
+	socket_err_catchall_test()
